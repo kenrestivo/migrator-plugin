@@ -50,21 +50,21 @@ function export_users(&$a) {
 
 
 
-function export_channel_hashes(&$a) {
+function export_channel_hashes(&$a, $account_id) {
 
 
-	if( $_REQUEST['account_id'] == ''){
+	if( $account_id == ''){
 		header('HTTP/1.0 422 Unprocessable Entity');
 		die('Must supply account_id parameter.');
 
 	}
 
 	$c = q("select * from channel where channel_account_id = '%d'",
-	       intval($_REQUEST['account_id']));
+	       intval($account_id));
 
 	if(! $c){
 		header('HTTP/1.0 404 Not Found');
-		die('No such account_id '. $_REQUEST['account_id']);
+		die('No such account_id '. $account_id);
 		
 	}			
 
@@ -79,9 +79,9 @@ function export_channel_hashes(&$a) {
 
 
 
-function export_identity(&$a) {
+function export_identity(&$a, $channel_hash) {
 
-	if( $_REQUEST['channel_hash'] == ''){
+	if( $channel_hash == ''){
 		header('HTTP/1.0 422 Unprocessable Entity');
 		die('Must supply channel_hash parameter.');
 
@@ -90,11 +90,11 @@ function export_identity(&$a) {
 	require_once('include/identity.php');
 		
 	$c = q("select channel_id from channel where channel_hash = '%s' LIMIT 1",
-	       dbesc($_REQUEST['channel_hash']));
+	       dbesc($channel_hash));
 				
 	if(! $c){
 		header('HTTP/1.0 404 Not Found');
-		die('No such channel '. $_REQUEST['channel_hash']);
+		die('No such channel '. $channel_hash);
 		
 	}			
 	json_return_and_die(
@@ -126,10 +126,10 @@ function migrator_init(&$a) {
 				export_users($a);
 				break;
 			case "channel_hashes":
-				export_channel_hashes($a);
+				export_channel_hashes($a, argv(3));
 				break;
 			case "identity":
-				export_identity($a);
+				export_identity($a, argv(3));
 				break;
 			}
 			break;
