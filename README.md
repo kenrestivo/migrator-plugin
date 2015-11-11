@@ -1,4 +1,4 @@
-# Migrator for Hubzilla
+# Migrator Plugin for Hubzilla
 
 Supports bulk migration of accounts, channels, and posts from one hub to another, or from RedMatrix to [Hubzilla](https://github.com/redmatrix/hubzilla).
 
