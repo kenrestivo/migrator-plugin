@@ -1,0 +1,3 @@
+url: $baseurl/migrator
+name: Migrate Users
+photo: $baseurl/addon/migrator/migrator.png
