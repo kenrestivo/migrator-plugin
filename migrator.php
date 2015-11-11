@@ -44,7 +44,7 @@ function export_users(&$a) {
 	}
 
 	json_return_and_die(array('status' => 'OK',
-				  'users' => $u));
+				  'users' => $ret));
 }
 
 
