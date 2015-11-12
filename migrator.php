@@ -59,7 +59,7 @@ function export_channel_hashes(&$a, $account_id) {
 
 	}
 
-	$c = q("select * from channel where channel_account_id = '%d'",
+	$c = q("select channel_hash, channel_id from channel where channel_account_id = '%d'",
 	       intval($account_id));
 
 	if(! $c){
@@ -70,7 +70,7 @@ function export_channel_hashes(&$a, $account_id) {
 
 	$ret = array();
 	foreach ($c as $r){
-		$ret[] = $r['channel_hash'];
+		$ret[] = $r;
 	}
 	json_return_and_die(array('status' => 'OK',
 				  'channel_hashes' => $ret));
@@ -111,11 +111,6 @@ function migrator_all_pages(&$a, &$b){
 
 function migrator_init(&$a) {
 
-	if(! is_site_admin()){
-		header('HTTP/1.0 401 Unauthorized');
-		die('Only admin accounts may use this endpoint.');
-	}
-
 	$x = argc(); 
 	if($x > 1){
 		api_login($a);
@@ -140,7 +135,14 @@ function migrator_init(&$a) {
 			die('No such endpoint');
 		}
 
+	} 
+
+	// It's not an API call
+	if(! is_site_admin()){
+		header('HTTP/1.0 401 Unauthorized');
+		die('Only admin accounts may use this endpoint.');
 	}
+
 }
 
 function migrator_module() { return; }
