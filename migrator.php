@@ -110,7 +110,6 @@ function migrator_all_pages(&$a, &$b){
 }
 
 function migrator_init(&$a) {
-	api_login($a);
 
 	if(! is_site_admin()){
 		header('HTTP/1.0 401 Unauthorized');
@@ -119,6 +118,7 @@ function migrator_init(&$a) {
 
 	$x = argc(); 
 	if($x > 1){
+		api_login($a);
 		switch(argv(1)){
 		case "export":
 			switch(argv(2)){
