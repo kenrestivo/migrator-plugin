@@ -103,8 +103,6 @@ function export_identity(&$a, $channel_hash) {
 }
 
 
-
-
 function migrator_all_pages(&$a, &$b){
 	// TODO: settings and insructions and such
 }
