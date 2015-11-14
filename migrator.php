@@ -28,6 +28,13 @@ function migrator_settings_post($a,&$post) {
 }
 
 function migrator_content(&$a){
+	// It's not an API call. Check login.
+	if(! is_site_admin()){
+		header('HTTP/1.0 401 Unauthorized');
+		die('Only admin accounts may use this endpoint.');
+	}
+
+	return("Migrator version " . MIGRATOR_VERSION);
 }
 
 
@@ -140,13 +147,6 @@ function migrator_init(&$a) {
 		}
 
 	} 
-
-	// It's not an API call
-	if(! is_site_admin()){
-		header('HTTP/1.0 401 Unauthorized');
-		die('Only admin accounts may use this endpoint.');
-	}
-
 }
 
 function migrator_module() { return; }
