@@ -34,9 +34,9 @@ function migrator_content(&$a){
 
 function export_users(&$a) {
 
-	$r = q("SELECT *  FROM account");
-
-	// TODO: paginating!
+	$r = q("SELECT *  FROM account where account_flags = %d and ((account_roles & %d) < 1)",
+	       intval(ACCOUNT_OK),
+	       intval(ACCOUNT_ROLE_SYSTEM));
 
 	$ret = array();
 	foreach($r as $u){
