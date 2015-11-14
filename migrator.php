@@ -7,6 +7,8 @@
  * Author: ken restivo <ken@restivo.org>
  */
 
+define ('MIGRATOR_VERSION', 1);
+
 require_once('include/api_auth.php');
 
 
@@ -113,6 +115,10 @@ function migrator_init(&$a) {
 	if($x > 1){
 		api_login($a);
 		switch(argv(1)){
+		case "version":
+			json_return_and_die(array("status" => "OK",
+						  "version" => MIGRATOR_VERSION));
+			break;
 		case "export":
 			switch(argv(2)){
 			case "users":
