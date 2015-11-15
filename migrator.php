@@ -29,15 +29,23 @@ function migrator_settings(&$a,&$s) {
 function migrator_settings_post($a,&$post) {
 }
 
+function json_error_die($code, $message){
+	header('HTTP/1.0 ' . $code);
+	json_return_and_die(array("status" => "Error",
+				  "message" => $message));
+}
+
+
 function migrator_content(&$a){
 	// It's not an API call. Check login.
 	if(! is_site_admin()){
-		header('HTTP/1.0 401 Unauthorized');
-		die('Only admin accounts may use this endpoint.');
+		json_error_die('401 Unauthorized', 
+			       'Only admin accounts may use this endpoint.');
 	}
 
 	return("Migrator version " . MIGRATOR_VERSION);
 }
+
 
 
 /// via https://stackoverflow.com/questions/2012187/how-to-check-that-a-string-is-an-int-but-not-a-double-etc
@@ -71,23 +79,22 @@ function export_channel_hashes(&$a, $account_id) {
 
 
 	if( $account_id == '' ){
-		header('HTTP/1.0 422 Unprocessable Entity');
-		die('Must supply account_id parameter.');
+		json_error_die('422 Unprocessable Entity',
+			       'Must supply account_id parameter.');
 
 	}
 
 	if(! validatesAsInt($account_id)){
-		header('HTTP/1.0 422 Unprocessable Entity');
-		die("That's not a number: ". $account_id);
+		json_error_die('422 Unprocessable Entity',
+			       "That's not a number: ". $account_id);
 	}
 
 	$c = q("select `channel_hash`, `channel_id` from `channel` where `channel_account_id` = %d",
 	       intval($account_id));
 
 	if(count($c) < 1){
-		header('HTTP/1.0 404 Not Found');
-		json_return_and_die(array('status' => 'Error',
-					  'message' => 'No channels for '. $account_id));
+		json_error_die('404 Not Found',
+			       'No channels for '. $account_id);
 	}			
 
 	$ret = array();
@@ -104,9 +111,8 @@ function get_channel_id($channel_hash){
 	       dbesc($channel_hash));
 				
 	if(! $c){
-		header('HTTP/1.0 404 Not Found');
-		json_return_and_die(array("status" => "Error",
-					  "message" => 'No such channel '. $channel_hash));
+		json_error_die('404 Not Found',
+			       'No such channel '. $channel_hash);
 	}	
 	return $c[0]['channel_id'];
 }
@@ -114,8 +120,8 @@ function get_channel_id($channel_hash){
 function export_identity(&$a, $channel_hash) {
 
 	if( $channel_hash == ''){
-		header('HTTP/1.0 422 Unprocessable Entity');
-		die('Must supply channel_hash parameter.');
+		json_error_die('422 Unprocessable Entity',
+			       'Must supply channel_hash parameter.');
 
 	}
 		
@@ -134,18 +140,18 @@ function export_items(&$a, $channel_hash, $year, $month){
 
 	if(validatesAsInt($year) && validatesAsInt($month)){
 	} else {
-		header('HTTP/1.0 422 Unprocessable Entity');
-		die('Month and year must be numbers'. $month . " " . $year);
+		json_error_die('422 Unprocessable Entity',
+			       'Month and year must be numbers'. $month . " " . $year);
 	}
 
 	if(($month < 1) || ($month > 12)){
-		header('HTTP/1.0 422 Unprocessable Entity');
-		die('Invalid month'. $month);
+		json_error_die('422 Unprocessable Entity',
+			       'Invalid month'. $month);
 	}
 	
 	if(($year < 1) || ($year > date('Y'))){
-		header('HTTP/1.0 422 Unprocessable Entity');
-		die('Are you from the future? Invalid year '. $year);
+		json_error_die('422 Unprocessable Entity',
+			       'Are you from the future? Invalid year '. $year);
 	}
 
 	json_return_and_die(identity_export_year(get_channel_id($channel_hash), $year, $month));
@@ -154,16 +160,15 @@ function export_items(&$a, $channel_hash, $year, $month){
 
 function first_post(&$a, $channel_hash){
 	if( $channel_hash == ''){
-		header('HTTP/1.0 422 Unprocessable Entity');
-		die('Must supply channel_hash parameter.');
+		json_error_die('422 Unprocessable Entity',
+			       'Must supply channel_hash parameter.');
 
 	}
 	$first = first_post_date(get_channel_id($channel_hash));
 	
 	if(! $first){
-		header('HTTP/1.0 404 Not Found');
-		json_return_and_die(array("status" => "Error",
-					  "message" => "No posts for " . $channel_hash));
+		json_error_die('404 Not Found',
+			       "No posts for " . $channel_hash);
 	}
 	json_return_and_die(array("status" => "OK",
 				  "date" => $first));
@@ -201,9 +206,8 @@ function migrator_init(&$a) {
 		case "import":
 			break;
 		default:
-			header('HTTP/1.0 404 Not Found');
-			json_return_and_die(array("status" => "Error",
-						  "message" => 'No such endpoint'));
+			json_error_die('404 Not Found',
+				       'No such endpoint');
 		}
 
 	} 
