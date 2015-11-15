@@ -11,6 +11,7 @@ curl -u testes:test -i http://hubzilla/migrator/export/identity/${SOME_LONG_CHAN
 ``
 
 These should authfail
+
 ```sh
 curl -i http://hubzilla/migrator/version
 curl -i http://hubzilla/migrator
