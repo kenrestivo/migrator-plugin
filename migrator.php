@@ -154,7 +154,12 @@ function export_items(&$a, $channel_hash, $year, $month){
 			       'Are you from the future? Invalid year '. $year);
 	}
 
-	json_return_and_die(identity_export_year(get_channel_id($channel_hash), $year, $month));
+	$items = identity_export_year(get_channel_id($channel_hash), $year, $month);
+	if(count($items) < 1){
+		json_error_die('404 Not Found',
+			       "No posts for $channel_hash on $year-$month");
+	}
+	json_return_and_die($items);
 }
 
 
