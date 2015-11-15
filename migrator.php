@@ -68,7 +68,7 @@ function export_channel_hashes(&$a, $account_id) {
 
 	}
 
-	$c = q("select channel_hash, channel_id from channel where channel_account_id = '%d'",
+	$c = q("select channel_hash, channel_id from channel where channel_account_id = %d",
 	       intval($account_id));
 
 	if(! $c){
