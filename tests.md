@@ -7,8 +7,9 @@ curl -u testes:test -i http://hubzilla/migrator/version
 curl -u testes:test -i http://hubzilla/migrator/export/users
 curl -u testes:test -i http://hubzilla/migrator/export/channel_hashes/${ACCOUNT_ID}
 curl -u testes:test -i http://hubzilla/migrator/export/identity/${SOME_LONG_CHAN_ID}
-
-``
+curl -u testes:test -i http://hubzilla/migrator/export/first_post/${SOME_LONG_CHAN_ID}
+curl -u testes:test -i http://hubzilla/migrator/export/items/${SOME_LONG_CHAN_ID}/${SOME_YEAR}/${SOME_MONTH}
+```
 
 These should authfail
 

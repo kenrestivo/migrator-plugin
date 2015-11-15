@@ -7,9 +7,11 @@
  * Author: ken restivo <ken@restivo.org>
  */
 
-define ('MIGRATOR_VERSION', 1);
+define ('MIGRATOR_VERSION', 2);
 
 require_once('include/api_auth.php');
+require_once('include/identity.php');
+require_once('include/items.php');
 
 
 function migrator_load(){
@@ -68,24 +70,23 @@ function export_users(&$a) {
 function export_channel_hashes(&$a, $account_id) {
 
 
-	if( $account_id == ''){
+	if( $account_id == '' ){
 		header('HTTP/1.0 422 Unprocessable Entity');
 		die('Must supply account_id parameter.');
 
 	}
-	$aid = validatesAsInt($account_id);
 
-	if(! $aid){
+	if(! validatesAsInt($account_id)){
 		header('HTTP/1.0 422 Unprocessable Entity');
 		die("That's not a number: ". $account_id);
 	}
 
 	$c = q("select `channel_hash`, `channel_id` from `channel` where `channel_account_id` = %d",
-	       $aid);
+	       intval($account_id));
 
 	if(count($c) < 1){
 		header('HTTP/1.0 404 Not Found');
-		die('No such account_id '. $aid);
+		die('No such account_id '. $account_id);
 		
 	}			
 
@@ -98,7 +99,17 @@ function export_channel_hashes(&$a, $account_id) {
 }
 
 
-
+function get_channel_id($channel_hash){
+	$c = q("select channel_id from channel where channel_hash = '%s' LIMIT 1",
+	       dbesc($channel_hash));
+				
+	if(! $c){
+		header('HTTP/1.0 404 Not Found');
+		json_return_and_die(array("status" => "Error",
+					  "message" => 'No such channel '. $channel_hash));
+	}	
+	return $c[0]['channel_id'];
+}
 
 function export_identity(&$a, $channel_hash) {
 
@@ -107,25 +118,55 @@ function export_identity(&$a, $channel_hash) {
 		die('Must supply channel_hash parameter.');
 
 	}
-
-	require_once('include/identity.php');
 		
-	$c = q("select channel_id from channel where channel_hash = '%s' LIMIT 1",
-	       dbesc($channel_hash));
-				
-	if(! $c){
-		header('HTTP/1.0 404 Not Found');
-		die('No such channel '. $channel_hash);
-		
-	}			
 	json_return_and_die(
-		identity_basic_export($c[0]['channel_id'],
+		identity_basic_export(get_channel_id($channel_hash),
 				      (($_REQUEST['posts']) ? intval($_REQUEST['posts']) : 0 )));
 }
 
 
 function migrator_all_pages(&$a, &$b){
 	// TODO: settings and insructions and such
+}
+
+
+function export_items(&$a, $channel_hash, $year, $month){
+
+	if(validatesAsInt($year) && validatesAsInt($month)){
+	} else {
+		header('HTTP/1.0 422 Unprocessable Entity');
+		die('Month and year must be numbers'. $month . " " . $year);
+	}
+
+	if(($month < 1) || ($month > 12)){
+		header('HTTP/1.0 422 Unprocessable Entity');
+		die('Invalid month'. $month);
+	}
+	
+	if(($year < 1) || ($year > date('Y'))){
+		header('HTTP/1.0 422 Unprocessable Entity');
+		die('Are you from the future? Invalid year '. $year);
+	}
+
+	json_return_and_die(identity_export_year(get_channel_id($channel_hash), $year, $month));
+}
+
+
+function first_post(&$a, $channel_hash){
+	if( $channel_hash == ''){
+		header('HTTP/1.0 422 Unprocessable Entity');
+		die('Must supply channel_hash parameter.');
+
+	}
+	$first = first_post_date(get_channel_id($channel_hash));
+	
+	if(! $first){
+		header('HTTP/1.0 404 Not Found');
+		json_return_and_die(array("status" => "Error",
+					  "message" => "No posts for " . $channel_hash));
+	}
+	json_return_and_die(array("status" => "OK",
+				  "date" => $first));
 }
 
 function migrator_init(&$a) {
@@ -149,13 +190,20 @@ function migrator_init(&$a) {
 			case "identity":
 				export_identity($a, argv(3));
 				break;
+			case "first_post":
+				first_post($a, argv(3));
+				break;
+			case "items":
+				export_items($a, argv(3), argv(4), argv(5));
+				break;
 			}
 			break;
 		case "import":
 			break;
 		default:
 			header('HTTP/1.0 404 Not Found');
-			die('No such endpoint');
+			json_return_and_die(array("status" => "Error",
+						  "message" => 'No such endpoint'));
 		}
 
 	} 
