@@ -86,8 +86,8 @@ function export_channel_hashes(&$a, $account_id) {
 
 	if(count($c) < 1){
 		header('HTTP/1.0 404 Not Found');
-		die('No such account_id '. $account_id);
-		
+		json_return_and_die(array('status' => 'Error',
+					  'message' => 'No channels for '. $account_id));
 	}			
 
 	$ret = array();
