@@ -11,6 +11,7 @@ In active development. Not ready for use yet.
 
 Standard Hubzilla plugin installation applies.
 
+TODO: document it.
 
 ## License
 
