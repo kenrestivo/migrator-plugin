@@ -38,6 +38,12 @@ function migrator_content(&$a){
 }
 
 
+/// via https://stackoverflow.com/questions/2012187/how-to-check-that-a-string-is-an-int-but-not-a-double-etc
+function validatesAsInt($number)
+{
+	$number = filter_var($number, FILTER_VALIDATE_INT);
+	return ($number !== FALSE);
+}
 
 
 
@@ -67,13 +73,19 @@ function export_channel_hashes(&$a, $account_id) {
 		die('Must supply account_id parameter.');
 
 	}
+	$aid = validatesAsInt($account_id);
+
+	if(! $aid){
+		header('HTTP/1.0 422 Unprocessable Entity');
+		die("That's not a number: ". $account_id);
+	}
 
 	$c = q("select `channel_hash`, `channel_id` from `channel` where `channel_account_id` = %d",
-	       intval($account_id));
+	       $aid);
 
 	if(count($c) < 1){
 		header('HTTP/1.0 404 Not Found');
-		die('No such account_id '. intval($account_id));
+		die('No such account_id '. $aid);
 		
 	}			
 
