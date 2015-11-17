@@ -9,6 +9,10 @@ curl -u testes:test -i http://hubzilla/migrator/export/channel_hashes/${ACCOUNT_
 curl -u testes:test -i http://hubzilla/migrator/export/identity/${SOME_LONG_CHAN_ID}
 curl -u testes:test -i http://hubzilla/migrator/export/first_post/${SOME_LONG_CHAN_ID}
 curl -u testes:test -i http://hubzilla/migrator/export/items/${SOME_LONG_CHAN_ID}/${SOME_YEAR}/${SOME_MONTH}
+
+curl -u testes:test -H "Content-Type: application/json" --data @sample-account.json http://hubzilla/migrator/import/account
+
+
 ```
 
 These should authfail
