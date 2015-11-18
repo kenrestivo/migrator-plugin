@@ -55,7 +55,11 @@ function migrator_init(&$a) {
 		switch(argv(1)){
 		case "version":
 			json_return_and_die(array("status" => "OK",
-						  "version" => MIGRATOR_VERSION));
+						  'platform' => PLATFORM_NAME,
+						  'platform_version' => RED_VERSION,
+						  'zot_version' => ZOT_REVISION,
+						  'db_version' => DB_UPDATE_VERSION,
+						  'migrator_version' => MIGRATOR_VERSION));
 			break;
 		case "import":
 			switch(argv(2)){
