@@ -1,9 +1,9 @@
 <?php
 
 require_once('migrator_utils.php');
+require_once('mod/import.php');
 
-
-function import_account(&$a) {
+function migrator_import_account(&$a) {
 
 
 	$account = json_decode(file_get_contents('php://input'), TRUE );
@@ -18,11 +18,10 @@ function import_account(&$a) {
 	}
 
 	$r = q("INSERT INTO account 
-			( account_parent,  account_salt,  account_password, account_email,  
+			( account_salt,  account_password, account_email,  
                           account_language, account_created, account_flags, account_roles,
                           account_expires, account_service_class )
 		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s' )",
-	       intval($account['account_parent']), 
 	       dbesc($account['account_salt']),
 	       dbesc($account['account_password']),
 	       dbesc($account['account_email']),
@@ -53,6 +52,20 @@ function import_account(&$a) {
 			       t('Server failed to find  account'));
 	}
 
+	logger('import_account: ERROR unreachable branch.');
 }
 
-// TODO: import channel
+
+function migrator_import_identity(&$a, $email) {
+	$found_id = get_account_by_email($email);
+	if(! $found_id){
+		json_error_die('404 Not Found',
+			       'No such account '. $email);
+	}
+	$res = import_account($a, $found_id);
+	json_return_and_die(array("status" => 'OK',
+				  'result' => $res,
+				  'files' => $_FILES,
+				  'email' => $email));
+	
+}

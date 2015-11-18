@@ -60,7 +60,10 @@ function migrator_init(&$a) {
 		case "import":
 			switch(argv(2)){
 			case "account":
-				import_account($a);
+				migrator_import_account($a);
+				break;
+			case "identity":
+				migrator_import_identity($a, argv(3));
 				break;
 			default:
 				json_error_die('404 Not Found',
