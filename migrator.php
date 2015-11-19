@@ -69,6 +69,9 @@ function migrator_init(&$a) {
 			case "identity":
 				migrator_import_identity($a, argv(3));
 				break;
+			case "items":
+				migrator_import_items($a, argv(3));
+				break;
 			default:
 				json_error_die('404 Not Found',
 					       'No such endpoint');

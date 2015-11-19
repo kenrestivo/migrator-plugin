@@ -69,3 +69,7 @@ function migrator_import_identity(&$a, $email) {
 				  'email' => $email));
 	
 }
+
+function migrator_import_items(&$a, $email) {
+	migrator_import_identity($a, $email);
+}
