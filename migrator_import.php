@@ -71,5 +71,9 @@ function migrator_import_identity(&$a, $email) {
 }
 
 function migrator_import_items(&$a, $email) {
+	global $_REQUEST; /// XXX hack
+	$_REQUEST['import_posts'] = 1;
+	// TODO: seize 
+       // $_REQUEST['make_primary'] = 1;
 	migrator_import_identity($a, $email);
 }
