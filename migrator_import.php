@@ -21,7 +21,7 @@ function migrator_import_account(&$a) {
 			( account_salt,  account_password, account_email,  
                           account_language, account_created, account_flags, account_roles,
                           account_expires, account_service_class )
-		VALUES ( %d, '%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s' )",
+		VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s' )",
 	       dbesc($account['account_salt']),
 	       dbesc($account['account_password']),
 	       dbesc($account['account_email']),
