@@ -7,7 +7,7 @@
  * Author: ken restivo <ken@restivo.org>
  */
 
-define ('MIGRATOR_VERSION', 4);
+define ('MIGRATOR_VERSION', 5);
 
 require_once('include/api_auth.php');
 require_once('migrator_export.php');
