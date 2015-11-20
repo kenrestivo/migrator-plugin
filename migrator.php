@@ -63,16 +63,16 @@ function migrator_init(&$a) {
 			break;
 		case "import":
 			switch(argv(2)){
-			case "account":
+			case 'account':
 				migrator_import_account($a);
 				break;
-			case "identity":
+			case 'identity':
 				migrator_import_identity($a, argv(3));
 				break;
-			case "items":
+			case 'items':
 				migrator_import_items($a, argv(3));
 				break;
-			case "directory":
+			case 'directory':
 				migrator_update_directory($a, argv(3));
 				break;
 			default:

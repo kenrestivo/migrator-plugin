@@ -98,4 +98,9 @@ function migrator_update_directory(&$a, $channel_hash){
 	proc_run('php','include/notifier.php','location',$channel_id);
 
 	proc_run('php', 'include/directory.php', $channel_id);
+
+	json_return_and_die(array("status" => 'OK',
+				  'channel_hash' => $channel_hash,
+				  'channel_id' => $channel_id));
+
 }
