@@ -79,7 +79,7 @@ function migrator_import_items(&$a, $channel_hash) {
 	}
 
 	
-	$src      = $_FILES['filename']['tmp_name'];
+	$src = $_FILES['filename']['tmp_name'];
 
 	if(intval($_FILES['filename']['size']) < 1){
 		json_error_die('422 - Unprocessable Entity',
@@ -89,7 +89,7 @@ function migrator_import_items(&$a, $channel_hash) {
 	unlink($src);
 
 
-	$res = import_items($channel_hash,$data['item']);
+	$res = import_items($channel_hash, $data['item']);
 
 
 	json_return_and_die(array("status" => 'OK',
