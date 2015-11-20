@@ -78,6 +78,17 @@ function migrator_import_items(&$a, $channel_hash) {
 			       'No such channel '. $channel_hash);
 	}
 
+	
+	$src      = $_FILES['filename']['tmp_name'];
+
+	if(intval($_FILES['filename']['size']) < 1){
+		json_error_die('422 - Unprocessable Entity',
+			       'No file attached, or zero size file');
+	}
+	$data = @file_get_contents($src);
+	unlink($src);
+
+
 	$res = import_items($channel_hash,$data['item']);
 
 
