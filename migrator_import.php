@@ -70,10 +70,32 @@ function migrator_import_identity(&$a, $email) {
 	
 }
 
-function migrator_import_items(&$a, $email) {
-	global $_REQUEST; /// XXX hack
-	$_REQUEST['import_posts'] = 1;
-	// TODO: seize 
-       // $_REQUEST['make_primary'] = 1;
-	migrator_import_identity($a, $email);
+function migrator_import_items(&$a, $channel_hash) {
+
+	$channel_id  = get_channel_id($channel_hash);
+	if(! $channel_id){
+		json_error_die('404 Not Found',
+			       'No such channel '. $channel_hash);
+	}
+
+	$res = import_items($channel_hash,$data['item']);
+
+
+	json_return_and_die(array("status" => 'OK',
+				  'result' => $res,
+				  'files' => $_FILES,
+				  'channel_id' => $channel_id));
+
+}
+
+function migrator_update_directory(&$a, $channel_hash){
+	$channel_id  = get_channel_id($channel_hash);
+	if(! $channel_id){
+		json_error_die('404 Not Found',
+			       'No such channel '. $channel_hash);
+	}
+
+	proc_run('php','include/notifier.php','location',$channel_id);
+
+	proc_run('php', 'include/directory.php', $channel_id);
 }

@@ -7,7 +7,7 @@
  * Author: ken restivo <ken@restivo.org>
  */
 
-define ('MIGRATOR_VERSION', 3);
+define ('MIGRATOR_VERSION', 4);
 
 require_once('include/api_auth.php');
 require_once('migrator_export.php');
@@ -71,6 +71,9 @@ function migrator_init(&$a) {
 				break;
 			case "items":
 				migrator_import_items($a, argv(3));
+				break;
+			case "directory":
+				migrator_update_directory($a, argv(3));
 				break;
 			default:
 				json_error_die('404 Not Found',
