@@ -85,11 +85,11 @@ function migrator_import_items(&$a, $channel_hash) {
 		json_error_die('422 - Unprocessable Entity',
 			       'No file attached, or zero size file');
 	}
-	$data = @file_get_contents($src);
+	$data = json_decode(@file_get_contents($src), true);
 	unlink($src);
 
 
-	$res = import_items($channel_hash, $data['item']);
+	$res = import_items($channel_id, $data['item']);
 
 
 	json_return_and_die(array("status" => 'OK',
