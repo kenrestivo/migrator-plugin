@@ -2,16 +2,23 @@
 
 Supports bulk migration of accounts, channels, and posts from one hub to another, or from RedMatrix to [Hubzilla](https://github.com/redmatrix/hubzilla).
 
+Requires Hubzilla version 1223 or higher, or Redmatrix 1223 or higher.
+
 # Status
 
-In active development. Not ready for use yet.
+Version 6, released for alpha.
 
 
 # Installation
 
-Standard Hubzilla plugin installation applies.
+Standard Hubzilla installation process:
+```sh
+	cd hubzilla (or redmatrix)
+    util/add_addon_repo https://github.com/kenrestivo/migrator-plugin migrator
 
-TODO: document it.
+```
+
+Then log in as administrator to the Hubzilla web interface, and enable the "Migrate Bulk Accounts" plugin.
 
 ## License
 
