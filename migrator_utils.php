@@ -2,6 +2,7 @@
 
 require_once('include/network.php');
 
+
 /// via https://stackoverflow.com/questions/2012187/how-to-check-that-a-string-is-an-int-but-not-a-double-etc
 function validatesAsInt($number)
 {
@@ -15,6 +16,7 @@ function json_error_die($num, $desc, $message){
 	json_return_and_die(array("status" => "Error",
 				  "message" => $message));
 
+}
 
 function get_channel_id($channel_hash){
 	$c = q("select channel_id from channel where channel_hash = '%s' LIMIT 1",
@@ -36,4 +38,4 @@ function get_account_by_email($email){
 	}
 }
 
-}
+
