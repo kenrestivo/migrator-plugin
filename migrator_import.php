@@ -2,6 +2,7 @@
 
 require_once('migrator_utils.php');
 require_once('mod/import.php');
+require_once('include/identity.php');
 
 function migrator_import_account(&$a) {
 
@@ -88,9 +89,11 @@ function migrator_import_items(&$a, $channel_hash) {
 	$data = json_decode(@file_get_contents($src), true);
 	unlink($src);
 
+	$saved_notification_flags = notifications_off($channel_id);
 
 	$res = import_items($channel_id, $data['item']);
 
+	notifications_on($channel_id, $saved_notification_flags);
 
 	json_return_and_die(array("status" => 'OK',
 				  'result' => $res,
