@@ -1,5 +1,6 @@
 <?php
 
+require_once('include/network.php');
 
 /// via https://stackoverflow.com/questions/2012187/how-to-check-that-a-string-is-an-int-but-not-a-double-etc
 function validatesAsInt($number)
@@ -9,6 +10,10 @@ function validatesAsInt($number)
 }
 
 
+function json_error_die($num, $desc, $message){
+	http_status($num, $desc);
+	json_return_and_die(array("status" => "Error",
+				  "message" => $message));
 
 
 function get_channel_id($channel_hash){
@@ -16,7 +21,7 @@ function get_channel_id($channel_hash){
 	       dbesc($channel_hash));
 				
 	if(! $c){
-		json_error_die('404 Not Found',
+		json_error_die(404, 'Not Found',
 			       'No such channel '. $channel_hash);
 	}	
 	return $c[0]['channel_id'];
@@ -31,8 +36,4 @@ function get_account_by_email($email){
 	}
 }
 
-function json_error_die($code, $message){
-	header('HTTP/1.0 ' . $code);
-	json_return_and_die(array("status" => "Error",
-				  "message" => $message));
 }

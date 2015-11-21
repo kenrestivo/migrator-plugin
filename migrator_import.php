@@ -36,7 +36,7 @@ function migrator_import_account(&$a) {
 
 	if(! $r) {
 		logger('import_account: DB INSERT failed.');
-		json_error_die('520 Unknown Error', 
+		json_error_die(520, 'Unknown Error', 
 			       t('Server failed to create account'));
 	}
 
@@ -49,7 +49,7 @@ function migrator_import_account(&$a) {
 					  'account_id' => $new_id));
 	} else {
 		logger('import_account: could not retrieve newly created account');
-		json_error_die('520 Unknown Error', 
+		json_error_die(520, 'Unknown Error', 
 			       t('Server failed to find  account'));
 	}
 
@@ -60,7 +60,7 @@ function migrator_import_account(&$a) {
 function migrator_import_identity(&$a, $email) {
 	$found_id = get_account_by_email($email);
 	if(! $found_id){
-		json_error_die('404 Not Found',
+		json_error_die(404, 'Not Found',
 			       'No such account '. $email);
 	}
 	$res = import_account($a, $found_id);
@@ -75,7 +75,7 @@ function migrator_import_items(&$a, $channel_hash) {
 
 	$channel_id  = get_channel_id($channel_hash);
 	if(! $channel_id){
-		json_error_die('404 Not Found',
+		json_error_die(404, 'Not Found',
 			       'No such channel '. $channel_hash);
 	}
 
@@ -83,7 +83,7 @@ function migrator_import_items(&$a, $channel_hash) {
 	$src = $_FILES['filename']['tmp_name'];
 
 	if(intval($_FILES['filename']['size']) < 1){
-		json_error_die('422 - Unprocessable Entity',
+		json_error_die(422, 'Unprocessable Entity',
 			       'No file attached, or zero size file');
 	}
 	$data = json_decode(@file_get_contents($src), true);
@@ -105,7 +105,7 @@ function migrator_import_items(&$a, $channel_hash) {
 function migrator_update_directory(&$a, $channel_hash){
 	$channel_id  = get_channel_id($channel_hash);
 	if(! $channel_id){
-		json_error_die('404 Not Found',
+		json_error_die(404, 'Not Found',
 			       'No such channel '. $channel_hash);
 	}
 

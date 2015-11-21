@@ -28,13 +28,13 @@ function export_channel_hashes(&$a, $account_id) {
 
 
 	if( $account_id == '' ){
-		json_error_die('422 Unprocessable Entity',
+		json_error_die(422, 'Unprocessable Entity',
 			       'Must supply account_id parameter.');
 
 	}
 
 	if(! validatesAsInt($account_id)){
-		json_error_die('422 Unprocessable Entity',
+		json_error_die(422, 'Unprocessable Entity',
 			       "That's not a number: ". $account_id);
 	}
 
@@ -42,7 +42,7 @@ function export_channel_hashes(&$a, $account_id) {
 	       intval($account_id));
 
 	if(count($c) < 1){
-		json_error_die('404 Not Found',
+		json_error_die(404, 'Not Found',
 			       'No channels for '. $account_id);
 	}			
 
@@ -60,23 +60,23 @@ function export_items(&$a, $channel_hash, $year, $month){
 
 	if(validatesAsInt($year) && validatesAsInt($month)){
 	} else {
-		json_error_die('422 Unprocessable Entity',
+		json_error_die(422, 'Unprocessable Entity',
 			       'Month and year must be numbers'. $month . " " . $year);
 	}
 
 	if(($month < 1) || ($month > 12)){
-		json_error_die('422 Unprocessable Entity',
+		json_error_die(422, 'Unprocessable Entity',
 			       'Invalid month'. $month);
 	}
 	
 	if(($year < 1) || ($year > date('Y'))){
-		json_error_die('422 Unprocessable Entity',
+		json_error_die(422, 'Unprocessable Entity',
 			       'Are you from the future? Invalid year '. $year);
 	}
 
 	$items = identity_export_year(get_channel_id($channel_hash), $year, $month);
 	if(count($items) < 1){
-		json_error_die('404 Not Found',
+		json_error_die(404, 'Not Found',
 			       "No posts for $channel_hash on $year-$month");
 	}
 	json_return_and_die($items);
@@ -85,14 +85,14 @@ function export_items(&$a, $channel_hash, $year, $month){
 
 function first_post(&$a, $channel_hash){
 	if( $channel_hash == ''){
-		json_error_die('422 Unprocessable Entity',
+		json_error_die(422, 'Unprocessable Entity',
 			       'Must supply channel_hash parameter.');
 
 	}
 	$first = first_post_date(get_channel_id($channel_hash));
 	
 	if(! $first){
-		json_error_die('404 Not Found',
+		json_error_die(404, 'Not Found',
 			       "No posts for " . $channel_hash);
 	}
 	json_return_and_die(array("status" => "OK",
@@ -103,7 +103,7 @@ function first_post(&$a, $channel_hash){
 function export_identity(&$a, $channel_hash) {
 
 	if( $channel_hash == ''){
-		json_error_die('422 Unprocessable Entity',
+		json_error_die(422, 'Unprocessable Entity',
 			       'Must supply channel_hash parameter.');
 
 	}

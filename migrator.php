@@ -34,7 +34,7 @@ function migrator_settings_post($a,&$post) {
 function migrator_content(&$a){
 	// It's not an API call. Check login.
 	if(! is_site_admin()){
-		json_error_die('401 Unauthorized', 
+		json_error_die(401, 'Unauthorized', 
 			       'Only admin accounts may use this endpoint.');
 	}
 
@@ -76,7 +76,7 @@ function migrator_init(&$a) {
 				migrator_update_directory($a, argv(3));
 				break;
 			default:
-				json_error_die('404 Not Found',
+				json_error_die(404, 'Not Found',
 					       'No such endpoint');
 				break;
 			}
@@ -98,13 +98,13 @@ function migrator_init(&$a) {
 				export_items($a, argv(3), argv(4), argv(5));
 				break;
 			default:
-				json_error_die('404 Not Found',
+				json_error_die(404, 'Not Found',
 					       'No such endpoint');
 				break;
 			}
 			break;
 		default:
-			json_error_die('404 Not Found',
+			json_error_die(404, 'Not Found',
 				       'No such endpoint');
 			break;
 		}
