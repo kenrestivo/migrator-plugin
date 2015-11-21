@@ -1,7 +1,7 @@
 <?php
 
 require_once('migrator_utils.php');
-require_once('include/import.php');
+require_once('mod/import.php');
 require_once('include/identity.php');
 
 function migrator_import_account(&$a) {
