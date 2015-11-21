@@ -62,6 +62,10 @@ function migrator_init(&$a) {
 						  'migrator_version' => MIGRATOR_VERSION));
 			break;
 		case "import":
+			if(PLATFORM_NAME == "redmatrix"){
+				json_error_die(400, 'Bad Request', 
+					       'Cannot import to Redmatrix, only to Hubzilla.');
+			}
 			switch(argv(2)){
 			case 'account':
 				migrator_import_account($a);
