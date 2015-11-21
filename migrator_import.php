@@ -11,7 +11,7 @@ function migrator_import_account(&$a) {
 
 
 	$found_id = get_account_by_email($account['account_email']);
-	if($found_id){
+	if($found_id > 0){
 		json_return_and_die(array("status" => 'OK',
 					  'old_account_id' => $account['account_id'],
 					  'already_present?' => true,
