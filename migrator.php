@@ -3,7 +3,7 @@
 /**
  * Name: Migrate users in bulk as admin
  * Description: Export a user and all their channels from one hub to another
- * Version: 0.1
+ * Version: 0.6
  * Author: ken restivo <ken@restivo.org>
  */
 
