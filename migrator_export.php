@@ -38,7 +38,7 @@ function export_channel_hashes(&$a, $account_id) {
 			       "That's not a number: ". $account_id);
 	}
 
-	$c = q("select `channel_hash`, `channel_id` from `channel` where `channel_account_id` = %d",
+	$c = q("select `channel_hash`, `channel_id` from `channel` where `channel_account_id` = %d and (`channel_deleted` is null or `channel_deleted` = '0000-00-00 00:00:00')",
 	       intval($account_id));
 
 	if(count($c) < 1){
