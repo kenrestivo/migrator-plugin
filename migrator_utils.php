@@ -39,3 +39,13 @@ function get_account_by_email($email){
 }
 
 
+function get_channel_by_hash($channel_hash){
+	$c = q("select * from channel where channel_hash = '%s' LIMIT 1",
+	       dbesc($channel_hash));
+				
+	if(! $c){
+		json_error_die(404, 'Not Found',
+			       'No such channel '. $channel_hash);
+	}	
+	return $c[0];
+}

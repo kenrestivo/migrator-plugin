@@ -73,8 +73,9 @@ function migrator_import_identity(&$a, $email) {
 
 function migrator_import_items(&$a, $channel_hash) {
 
-	$channel_id  = get_channel_id($channel_hash);
-	if(! $channel_id){
+	$channel  = get_channel_by_hash($channel_hash);
+    // XXX redundant, get_channel_by_hash alrady throws on not found
+	if(! $channel){
 		json_error_die(404, 'Not Found',
 			       'No such channel '. $channel_hash);
 	}
@@ -89,16 +90,16 @@ function migrator_import_items(&$a, $channel_hash) {
 	$data = json_decode(@file_get_contents($src), true);
 	unlink($src);
 
-	$saved_notification_flags = notifications_off($channel_id);
+	$saved_notification_flags = notifications_off($channel['channel_id']);
 
-	$res = import_items($channel_id, $data['item']);
+	$res = import_items($channel, $data['item']);
 
-	notifications_on($channel_id, $saved_notification_flags);
+	notifications_on($channel['channel_id'], $saved_notification_flags);
 
 	json_return_and_die(array("status" => 'OK',
 				  'result' => $res,
 				  'files' => $_FILES,
-				  'channel_id' => $channel_id));
+				  'channel_id' => $channel['channel_id']));
 
 }
 
